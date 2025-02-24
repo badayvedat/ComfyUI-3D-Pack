@@ -42,10 +42,7 @@ class DiffRastRenderer(nn.Module):
 
         self.mesh = mesh
 
-        if force_cuda_rast or os.name != 'nt':
-            self.glctx = dr.RasterizeCudaContext()
-        else:
-            self.glctx = dr.RasterizeGLContext()
+        self.glctx = dr.RasterizeCudaContext()
         
         # extract trainable parameters
         self.v_offsets = nn.Parameter(torch.zeros_like(self.mesh.v), requires_grad=True)

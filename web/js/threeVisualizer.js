@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-//import { api } from '/scripts/ui/api.ts';
+import { api } from '/scripts/api.js';
 import {getRGBValue} from '/extensions/ComfyUI-3D-Pack/js/sharedFunctions.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -58,7 +58,6 @@ var lastTimestamp = "";
 var needUpdate = false;
 let mixer;
 let currentURL;
-var url = location.protocol + '//' + location.host;
 
 downloadButton.addEventListener('click', e => {
     window.open(currentURL, '_blank');
@@ -107,7 +106,8 @@ async function main(filepath="") {
     if (/^.+\.[a-zA-Z]+$/.test(filepath)){
 
         let params = {"filepath": filepath};
-        currentURL = url + '/viewfile?' + new URLSearchParams(params);
+//        currentURL = api.apiURL('/viewfile?' + new URLSearchParams(params));
+        currentURL = api.fileURL('/extensions/ComfyUI-3D-Pack/html/viewfile?' + new URLSearchParams(params));
 
         var filepathSplit = filepath.split('.');
         var fileExt = filepathSplit.pop().toLowerCase();
@@ -120,7 +120,7 @@ async function main(filepath="") {
             var mtlFilepath = filepathNoExt.replace(/^.*[\\\/]/, '') + ".mtl";
 
             const mtlLoader = new MTLLoader();
-            mtlLoader.setPath(url + '/viewfile?' + new URLSearchParams({"filepath": mtlFolderpath}));
+            mtlLoader.setPath(api.apiURL('/extensions/ComfyUI-3D-Pack/html/viewfile?' + new URLSearchParams({"filepath": mtlFolderpath})));
             mtlLoader.load( mtlFilepath, function ( mtl ) {
                 mtl.preload();
                 loader.setMaterials( mtl );
@@ -173,5 +173,4 @@ async function main(filepath="") {
     frameUpdate();
 }
 
-//main("C:/Users/reall/Softwares/ComfyUI_windows_portable/ComfyUI/output/MeshTest/Mesh_01.obj");
 main();
